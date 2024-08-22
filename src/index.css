@@ -21,6 +21,7 @@ body {
   }
   
   ::-webkit-scrollbar-thumb {
+    min-height: 50px;
     background-color: #d6dee1;
     border-radius: 20px;
     border: 6px solid transparent;

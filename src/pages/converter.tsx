@@ -1,38 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./converter.module.scss";
 import { UiInput, UiSelect } from "../components";
+import { url } from "../constants/urls";
+import { initRates } from "../constants/initRates";
 
 export function Converter() {
   const [amount, setAmount] = useState<number>();
-  const [result, setResult] = useState<number>(100);
+  const [result, setResult] = useState<number>();
+  const [rates, setRates] = useState<{ [currency: string]: number }>(initRates);
+  const [from, setFrom] = useState("RUB");
+  const [to, setTo] = useState("USD");
 
-  const currencyOptions = [
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    { label: "USD - United States Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "JPY - Japanese Yen", value: "JPY" },
-    // Add more currencies as needed
-  ];
+  useEffect(() => {
+    async function getRates() {
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          throw new Error("error");
+        }
+        const json = await response.json();
+        setRates(json.rates);
+      } catch (error) {
+        alert((error as Error).message);
+      }
+    }
+
+    getRates();
+  }, []);
+
+  useEffect(() => {
+    if (from && to && amount) {
+      setResult((amount / rates[from]) * rates[to]);
+    }
+  }, [rates, from, to, amount]);
 
   return (
     <div className={classes.container}>
@@ -50,28 +52,41 @@ export function Converter() {
           onChange={(e) => setAmount(Number(e.target.value))}
         />
         <UiSelect
-          options={currencyOptions}
+          options={Object.keys(rates)}
           placeholder="From"
           onChange={(val: string) => {
-            console.log("Selected currency:", val);
+            setFrom(val);
           }}
         />
-        <button className={classes.button}>
+        <button
+          className={classes.button}
+          onClick={() => {
+            const temp = from;
+            setFrom(to);
+            setTo(temp);
+          }}
+        >
           <span className={classes.arrow}>⇆</span>
         </button>
         <UiSelect
-          options={currencyOptions}
+          options={Object.keys(rates)}
           placeholder="To"
           onChange={(val: string) => {
-            console.log("Selected currency:", val);
+            setTo(val);
           }}
         />
       </div>
-      <div className={classes.result}>
-        {result.toFixed(5)}
-        <div className={classes.rate}>USD=1,000</div>
-        <div className={classes.rate}>RUB=1,000</div>
-      </div>
+      {result && (
+        <div className={classes.result}>
+          {result?.toFixed(5)} {to}
+          <div className={classes.rate}>
+            1 {from}={((1 / rates[from]) * rates[to]).toFixed(3)} {to}
+          </div>
+          <div className={classes.rate}>
+            1 {to}={(rates[from] / rates[to]).toFixed(3)} {from}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
