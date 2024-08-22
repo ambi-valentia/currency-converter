@@ -1,0 +1,70 @@
+.select__wrapper {
+  position: relative;
+  width: 30%;
+}
+
+.select__box {
+  width: 100%;
+  min-height: 45px;
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #d7d5cf;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  
+  font: 400 16px / 20px 'Segoe UI';
+  text-align: center;
+
+  &:hover {
+    border: 1px solid #8a2be2;
+  }
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected {
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  word-break: break-all;
+}
+
+.placeholder {
+  color: #c8bca8;
+}
+
+.arrow {
+  color: #c8bca8;
+  margin-left: 10px;
+}
+
+.options__container {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  max-height: 300px;
+  overflow-y: auto;
+  
+  z-index: 1;
+}
+
+.option {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: rgb(251, 248, 255);
+}
+

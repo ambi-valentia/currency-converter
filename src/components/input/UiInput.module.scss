@@ -1,0 +1,52 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 33%;
+}
+
+.input {
+  background-color: white;
+  color: black;
+  width: 100%;
+  min-height: 45px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid #d7d5cf;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  
+  font: 400 16px / 18px "Segoe UI";
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    border: 1px solid #8a2be2;
+    outline: none;
+  }
+  &:focus {
+    border: 1px solid #8a2be2;
+  }
+  &::placeholder {
+    color: #c8bca8;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.error {
+  border: 2px solid red;
+  &:hover,
+  &:focus {
+    border: 2px solid red;
+  }
+}
