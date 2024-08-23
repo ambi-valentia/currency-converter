@@ -3,17 +3,24 @@ import classes from "./converter.module.scss";
 import { UiInput, UiSelect } from "../components";
 import { url } from "../constants/urls";
 import { currencies, initRates } from "../constants/currenciesRates";
+import { getCountryCodeFromLocale } from "../lib/getCountryFromLocale";
+import { countryToCurrency } from "../constants/countryToCurrency";
 
 const currencyOptions = Object.values(currencies).map((label, index) => ({
   label: `${Object.keys(currencies)[index] + " - " + label}`,
   value: Object.keys(currencies)[index],
 }));
 
+const userLocale = navigator.language || "en-US";
+const countryCode = getCountryCodeFromLocale(userLocale);
+
 export function Converter() {
   const [amount, setAmount] = useState<number>(1);
   const [result, setResult] = useState<number>();
   const [rates, setRates] = useState<{ [currency: string]: number }>(initRates);
-  const [from, setFrom] = useState("");
+  const [from, setFrom] = useState<string>(
+    countryCode ? countryToCurrency[countryCode] : ""
+  );
   const [to, setTo] = useState("");
   const [error, setError] = useState(false);
 
@@ -62,7 +69,10 @@ export function Converter() {
         />
         <UiSelect
           options={currencyOptions}
-          selected={{value: from, label: `${from + ' - ' + currencies[from]}`}}
+          selected={{
+            value: from,
+            label: `${from + " - " + currencies[from]}`,
+          }}
           placeholder="From"
           onChange={(val: string) => {
             setFrom(val);
@@ -80,7 +90,7 @@ export function Converter() {
         </button>
         <UiSelect
           options={currencyOptions}
-          selected={{value: to, label: `${to + ' - ' + currencies[to]}`}}
+          selected={{ value: to, label: `${to + " - " + currencies[to]}` }}
           placeholder="To"
           onChange={(val: string) => {
             setTo(val);
