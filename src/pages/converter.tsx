@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import classes from "./converter.module.scss";
 import { UiInput, UiSelect } from "../components";
 import { url } from "../constants/urls";
-import { initRates } from "../constants/currenciesRates";
+import { currencies, initRates } from "../constants/currenciesRates";
+
+const currencyOptions = Object.values(currencies).map((label, index) => ({
+  label: `${Object.keys(currencies)[index] + " - " + label}`,
+  value: Object.keys(currencies)[index],
+}));
 
 export function Converter() {
   const [amount, setAmount] = useState<number>(1);
@@ -56,8 +61,8 @@ export function Converter() {
           }}
         />
         <UiSelect
-          options={Object.keys(rates)}
-          selected={from}
+          options={currencyOptions}
+          selected={{value: from, label: `${from + ' - ' + currencies[from]}`}}
           placeholder="From"
           onChange={(val: string) => {
             setFrom(val);
@@ -74,8 +79,8 @@ export function Converter() {
           <span className={classes.arrow}>⇆</span>
         </button>
         <UiSelect
-          options={Object.keys(rates)}
-          selected={to}
+          options={currencyOptions}
+          selected={{value: to, label: `${to + ' - ' + currencies[to]}`}}
           placeholder="To"
           onChange={(val: string) => {
             setTo(val);

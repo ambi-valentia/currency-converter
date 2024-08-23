@@ -1,9 +1,14 @@
 import { FC, useEffect, useRef, useState } from "react";
 import classes from "./UiSelect.module.scss";
 
+interface option {
+  value: string;
+  label: string;
+}
+
 interface SelectProps {
-  options: string[];
-  selected: string;
+  options: option[];
+  selected: option;
   placeholder?: string;
   onChange: (value: string) => void;
 }
@@ -45,13 +50,13 @@ export const UiSelect: FC<SelectProps> = ({
 
   useEffect(() => {
     if (searchValue) {
-      const found = options.filter((str) => str.startsWith(searchValue));
+      const found = options.filter((str) => str.label.startsWith(searchValue));
       setFound(found);
     } else setFound(options);
   }, [searchValue]);
 
   useEffect(() => {
-    setSearchValue(selected);
+    setSearchValue(selected.value);
   }, [selected]);
 
   const handleInputClick = () => {
@@ -81,11 +86,11 @@ export const UiSelect: FC<SelectProps> = ({
           {foundOptions.length > 0 ? (
             foundOptions.map((option) => (
               <div
-                key={option}
+                key={option.value}
                 className={classes.option}
-                onClick={() => handleSelect(option)}
+                onClick={() => handleSelect(option.value)}
               >
-                {option}
+                {option.label}
               </div>
             ))
           ) : (

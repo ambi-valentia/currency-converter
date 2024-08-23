@@ -58,6 +58,13 @@
   overflow-y: auto;
 
   z-index: 1;
+
+  @media (max-width: 699.98px) {
+    width: 95dvw;
+    position: fixed;
+    left: 2.5dvw;
+    margin-top: 10px;
+  }
 }
 
 .option {
