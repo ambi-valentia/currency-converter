@@ -102,7 +102,7 @@ export function Converter() {
           !!amount && result ? classes.result_shown : ""
         }`}
       >
-        {result?.toFixed(6)} {to}
+        {result?.toFixed(6)} {!!amount && result && to}
         <div className={classes.rate}>
           1 {from}={((1 / rates[from]) * rates[to]).toFixed(5)} {to}
         </div>
