@@ -10,7 +10,7 @@
 }
 
 .welcome {
-  font: 500 48px / 52px "Segoe UI";
+  font: 500 48px / 52px "Segoe UI", "Noto Sans", sans-serif;
   text-align: center;
   color: #01008e;
 }
@@ -70,7 +70,7 @@
   transform-origin: left top;
   transform: scaleY(0);
 
-  font: 500 48px / 52px "Segoe UI";
+  font: 500 48px / 52px "Segoe UI", "Noto Sans",  sans-serif;
   text-align: left;
   color: #01008e;
 }
