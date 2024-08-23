@@ -65,9 +65,18 @@
 }
 
 .result {
+  overflow: hidden; 
+  transition: all .5s ease-in-out;
+  transform-origin: left top;
+  transform: scaleY(0);
+
   font: 500 48px / 52px "Segoe UI";
   text-align: left;
   color: #01008e;
+}
+
+.result_shown {
+  transform: scaleY(1);
 }
 
 .rate {

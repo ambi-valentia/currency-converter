@@ -1,10 +1,10 @@
 .select__wrapper {
   width: 30%;
+  position: relative;
 }
 
 .select__box {
   width: 100%;
-  position: relative;
 }
 
 .selected {
@@ -22,14 +22,10 @@
   font: 400 16px / 20px "Segoe UI";
   text-align: center;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
-
   word-break: break-all;
 
   &:focus,
@@ -54,7 +50,7 @@
 .options__container {
   position: absolute;
   margin-top: 5px;
-  // ? width: 100%;
+  width: 100%;
   border-radius: 12px;
   border: 1px solid #ccc;
   background-color: #fff;

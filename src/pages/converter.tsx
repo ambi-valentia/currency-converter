@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import classes from "./converter.module.scss";
 import { UiInput, UiSelect } from "../components";
 import { url } from "../constants/urls";
-import { initRates } from "../constants/initRates";
+import { initRates } from "../constants/currenciesRates";
 
 export function Converter() {
-  const [amount, setAmount] = useState<number>();
+  const [amount, setAmount] = useState<number>(1);
   const [result, setResult] = useState<number>();
   const [rates, setRates] = useState<{ [currency: string]: number }>(initRates);
-  const [from, setFrom] = useState("RUB");
-  const [to, setTo] = useState("USD");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function getRates() {
@@ -31,9 +32,7 @@ export function Converter() {
   }, []);
 
   useEffect(() => {
-    if (from && to && amount) {
-      setResult((amount / rates[from]) * rates[to]);
-    }
+    if (from && to && amount) setResult((amount / rates[from]) * rates[to]);
   }, [rates, from, to, amount]);
 
   return (
@@ -45,14 +44,20 @@ export function Converter() {
         <UiInput
           placeholder="Amount"
           type="number"
+          error={error}
           value={amount?.toString()}
           onKeyDown={(e) =>
             ["E", "e", "-", "+"].includes(e.key) && e.preventDefault()
           }
-          onChange={(e) => setAmount(Number(e.target.value))}
+          onChange={(e) => {
+            setAmount(Number(e.target.value));
+            if (!e.target.value) setError(true);
+            else setError(false);
+          }}
         />
         <UiSelect
           options={Object.keys(rates)}
+          selected={from}
           placeholder="From"
           onChange={(val: string) => {
             setFrom(val);
@@ -70,23 +75,26 @@ export function Converter() {
         </button>
         <UiSelect
           options={Object.keys(rates)}
+          selected={to}
           placeholder="To"
           onChange={(val: string) => {
             setTo(val);
           }}
         />
       </div>
-      {result && (
-        <div className={classes.result}>
-          {result?.toFixed(5)} {to}
-          <div className={classes.rate}>
-            1 {from}={((1 / rates[from]) * rates[to]).toFixed(3)} {to}
-          </div>
-          <div className={classes.rate}>
-            1 {to}={(rates[from] / rates[to]).toFixed(3)} {from}
-          </div>
+      <div
+        className={`${classes.result} ${
+          !!amount && result ? classes.result_shown : ""
+        }`}
+      >
+        {result?.toFixed(6)} {to}
+        <div className={classes.rate}>
+          1 {from}={((1 / rates[from]) * rates[to]).toFixed(5)} {to}
         </div>
-      )}
+        <div className={classes.rate}>
+          1 {to}={(rates[from] / rates[to]).toFixed(5)} {from}
+        </div>
+      </div>
     </div>
   );
 }

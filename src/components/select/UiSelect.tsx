@@ -1,43 +1,68 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import classes from "./UiSelect.module.scss";
 
 interface SelectProps {
   options: string[];
+  selected: string;
   placeholder?: string;
   onChange: (value: string) => void;
 }
 
 export const UiSelect: FC<SelectProps> = ({
   options,
+  selected,
   placeholder = "Select an option",
   onChange,
 }: SelectProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
-  const [searchValue, setSearchValue] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [foundOptions, setFound] = useState(options);
 
+  const selectRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        selectRef.current &&
+        !selectRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   const handleSelect = (value: string) => {
     setIsOpen(false);
-    setSelectedValue(value);
     setSearchValue(value);
     onChange(value);
   };
 
   useEffect(() => {
     if (searchValue) {
-      const found = foundOptions.filter((str) => str.startsWith(searchValue));
-      if (found) {
-        setFound(found);
-        setIsOpen(true);
-      }
-      else setIsOpen(false);
+      const found = options.filter((str) => str.startsWith(searchValue));
+      setFound(found);
     } else setFound(options);
   }, [searchValue]);
 
+  useEffect(() => {
+    setSearchValue(selected);
+  }, [selected]);
+
+  const handleInputClick = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setFound(options);
+    }
+  };
+
   return (
-    <div className={classes.select__wrapper}>
+    <div className={classes.select__wrapper} ref={selectRef}>
       <div className={classes.select__box}>
         <input
           className={classes.selected}
@@ -47,21 +72,25 @@ export const UiSelect: FC<SelectProps> = ({
           onChange={(e) => {
             setSearchValue(e.target.value.toUpperCase());
           }}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleInputClick}
         />
         <span className={classes.arrow}>&#9662;</span>
       </div>
       {isOpen && (
         <div className={classes.options__container}>
-          {foundOptions.map((option) => (
-            <div
-              key={option}
-              className={classes.option}
-              onClick={() => handleSelect(option)}
-            >
-              {option}
-            </div>
-          ))}
+          {foundOptions.length > 0 ? (
+            foundOptions.map((option) => (
+              <div
+                key={option}
+                className={classes.option}
+                onClick={() => handleSelect(option)}
+              >
+                {option}
+              </div>
+            ))
+          ) : (
+            <div className={classes.option}>No results available</div>
+          )}
         </div>
       )}
     </div>

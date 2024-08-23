@@ -44,9 +44,9 @@ input[type="number"] {
 }
 
 .error {
-  border: 2px solid red;
+  border: 1px solid #c80037;
   &:hover,
   &:focus {
-    border: 2px solid red;
+    border: 1px solid #c80037;
   }
 }
