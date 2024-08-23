@@ -1,6 +1,6 @@
 # Welcome to Currency Converter!
 
-This is a simple slick mobile friendly web app for currency convertion. Try it yourself now: https://ambi-valentia.github.io/currency-converter/
+This is a simple slick mobile friendly web app for currency conversion. Try it yourself now: https://ambi-valentia.github.io/currency-converter/
 
 Features: 
 - Up-to-date rates from open API
