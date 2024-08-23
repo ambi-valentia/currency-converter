@@ -42,6 +42,7 @@
 
   @media (max-width: 699.98px) {
     width: 100%;
+    gap: 5px;
   }
 }
 
@@ -62,17 +63,28 @@
   &:hover {
     color: #00f;
   }
+
+  @media (max-width: 699.98px) {
+    width: auto;
+    height: auto;
+    border: none;
+  }
 }
 
 .result {
-  overflow: hidden; 
-  transition: all .5s ease-in-out;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
   transform-origin: left top;
   transform: scaleY(0);
+  word-break: break-word;
 
-  font: 500 48px / 52px "Segoe UI", "Noto Sans",  sans-serif;
+  font: 500 48px / 52px "Segoe UI", "Noto Sans", sans-serif;
   text-align: left;
   color: #01008e;
+
+  @media (max-width: 699.98px) {
+    text-align: center;
+  }
 }
 
 .result_shown {
