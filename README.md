@@ -3,6 +3,7 @@
 This is a simple slick mobile friendly web app for currency conversion. Try it yourself now: https://ambi-valentia.github.io/currency-converter/
 
 Features: 
+- 180 currencies, including crypto
 - Up-to-date rates from open API
 - On-the-go convertion
 - Mobile-friendly
