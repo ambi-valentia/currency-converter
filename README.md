@@ -11,3 +11,11 @@ Features:
 - Switch `from` and `to` values
 
 ![image](https://github.com/user-attachments/assets/e20b229f-6e4b-4337-8749-6cc4d4026f36)
+
+```install
+npm install
+```
+
+```run
+npm run dev
+```
