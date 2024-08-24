@@ -5,6 +5,8 @@ import { url } from "../constants/urls";
 import { currencies, initRates } from "../constants/currenciesRates";
 import { getCountryCodeFromLocale } from "../lib/getCountryFromLocale";
 import { countryToCurrency } from "../constants/countryToCurrency";
+import React from "react";
+import { supportsInputTypeNumber } from "../lib/supportsNumberTypeInput";
 
 const currencyOptions = Object.values(currencies).map((label, index) => ({
   label: `${Object.keys(currencies)[index] + " - " + label}`,
@@ -15,14 +17,13 @@ const userLocale = navigator.language || "en-US";
 const countryCode = getCountryCodeFromLocale(userLocale);
 
 export function Converter() {
-  const [amount, setAmount] = useState<number>(1);
+  const [amount, setAmount] = useState<string>("");
   const [result, setResult] = useState<number>();
   const [rates, setRates] = useState<{ [currency: string]: number }>(initRates);
   const [from, setFrom] = useState<string>(
     countryCode ? countryToCurrency[countryCode] : ""
   );
   const [to, setTo] = useState("");
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function getRates() {
@@ -34,7 +35,7 @@ export function Converter() {
           throw new Error("error");
         }
         const json = await response.json();
-        setRates(json.rates);
+        if (json.rates) setRates(json.rates);
       } catch (error) {
         alert((error as Error).message);
       }
@@ -44,7 +45,8 @@ export function Converter() {
   }, []);
 
   useEffect(() => {
-    if (from && to && amount) setResult((amount / rates[from]) * rates[to]);
+    if (from && to && amount)
+      setResult((Number(amount) / rates[from]) * rates[to]);
   }, [rates, from, to, amount]);
 
   return (
@@ -53,20 +55,40 @@ export function Converter() {
         Welcome to <span className={classes.name}>Currency Converter</span>
       </div>
       <div className={classes.converter__wrapper}>
-        <UiInput
-          placeholder="Amount"
-          type="number"
-          error={error}
-          value={amount?.toString()}
-          onKeyDown={(e) =>
-            ["E", "e", "-", "+"].includes(e.key) && e.preventDefault()
-          }
-          onChange={(e) => {
-            setAmount(Number(e.target.value));
-            if (!e.target.value) setError(true);
-            else setError(false);
-          }}
-        />
+        {supportsInputTypeNumber() ? (
+          <UiInput
+            placeholder="Amount"
+            type="number"
+            value={amount}
+            onKeyDown={(e) =>
+              ["E", "e", "-", "+"].includes(e.key) && e.preventDefault()
+            }
+            onChange={(e) => {
+              setAmount(e.target.value.replace(/^0+(?=\d)/, ""));
+            }}
+          />
+        ) : (
+          <UiInput
+            placeholder="Amount"
+            type="text"
+            value={amount}
+            onChange={(e) => {
+              const regex = /^(0|[1-9]\d+)(\.\d*)?$/g;
+              const value = e.target.value;
+
+              if (regex.test(value)) {
+                setAmount(value);
+              } else {
+                setAmount(
+                  value
+                    .replace(/[^\d.]/g, "")
+                    .replace(/^0+(?=\d)/, "")
+                    .replace(/(\..*)\./g, "$1")
+                );
+              }
+            }}
+          />
+        )}
         <UiSelect
           options={currencyOptions}
           selected={{
@@ -102,7 +124,11 @@ export function Converter() {
           !!amount && result ? classes.result_shown : ""
         }`}
       >
-        {result?.toFixed(6)} {!!amount && result && to}
+        {!!Number(amount) && result && (
+          <React.Fragment>
+            {result?.toFixed(6)} {to}
+          </React.Fragment>
+        )}
         <div className={classes.rate}>
           1 {from}={((1 / rates[from]) * rates[to]).toFixed(5)} {to}
         </div>
