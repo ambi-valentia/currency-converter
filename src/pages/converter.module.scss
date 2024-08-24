@@ -74,9 +74,11 @@
   }
 }
 
-.arrow {
-  position: relative;
-  bottom: 2px;
+@-moz-document url-prefix() {
+  .arrow {
+    position: relative;
+    bottom: 2px;
+  }
 }
 
 .result {
