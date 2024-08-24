@@ -50,15 +50,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  position: relative;
+
   width: 60px;
   height: 60px;
+
   border-radius: 50%;
+  color: rgb(0, 128, 255);
   background-color: white;
   border: 1px solid #d7d5cf;
   cursor: pointer;
   font-size: 24px;
-  color: rgb(0, 128, 255);
-  position: relative;
 
   &:hover {
     color: #00f;
@@ -69,6 +72,11 @@
     height: auto;
     border: none;
   }
+}
+
+.arrow {
+  position: relative;
+  bottom: 2px;
 }
 
 .result {
