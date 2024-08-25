@@ -9,7 +9,7 @@ import React from "react";
 import { supportsInputTypeNumber } from "../lib/supportsNumberTypeInput";
 
 const currencyOptions = Object.values(currencies).map((label, index) => ({
-  label: `${Object.keys(currencies)[index] + " - " + label}`,
+  label: label,
   value: Object.keys(currencies)[index],
 }));
 

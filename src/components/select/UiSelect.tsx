@@ -50,7 +50,27 @@ export const UiSelect: FC<SelectProps> = ({
 
   useEffect(() => {
     if (searchValue) {
-      const found = options.filter((str) => str.label.startsWith(searchValue));
+      const foundSet = new Set();
+      const found = options.filter((str) => {
+        if (str.value.startsWith(searchValue)) {
+          foundSet.add(str.value);
+          return true;
+        }
+        return false;
+      });
+      found.push(
+        ...options.filter((str) => {
+          if (
+            !foundSet.has(str.value) &&
+            (str.label.toUpperCase().startsWith(searchValue) ||
+              str.label.toUpperCase().includes(searchValue))
+          ) {
+            foundSet.add(str.value);
+            return true;
+          }
+          return false;
+        })
+      );
       setFound(found);
     } else setFound(options);
   }, [searchValue]);
@@ -73,7 +93,7 @@ export const UiSelect: FC<SelectProps> = ({
           className={classes.selected}
           placeholder={placeholder}
           value={searchValue}
-          maxLength={3}
+          maxLength={5}
           onChange={(e) => {
             setSearchValue(e.target.value.toUpperCase());
           }}
@@ -90,7 +110,7 @@ export const UiSelect: FC<SelectProps> = ({
                 className={classes.option}
                 onClick={() => handleSelect(option.value)}
               >
-                {option.label}
+                {`${option.value + " - " + option.label}`}
               </div>
             ))
           ) : (
