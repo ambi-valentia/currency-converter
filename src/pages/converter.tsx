@@ -24,6 +24,7 @@ export function Converter() {
     countryCode ? countryToCurrency[countryCode] : ""
   );
   const [to, setTo] = useState("");
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
     async function getRates() {
@@ -37,12 +38,15 @@ export function Converter() {
         const json = await response.json();
         if (json.rates) setRates(json.rates);
       } catch (error) {
-        alert((error as Error).message);
+        console.log((error as Error).message);
+        if (retry < 1) {
+          setTimeout(() => setRetry(retry + 1), 4000); // Retry once
+        }
       }
     }
 
     getRates();
-  }, []);
+  }, [retry]);
 
   useEffect(() => {
     if (from && to && amount)
@@ -130,10 +134,10 @@ export function Converter() {
           </React.Fragment>
         )}
         <div className={classes.rate}>
-          1 {from}={((1 / rates[from]) * rates[to]).toFixed(5)} {to}
+          1 {from}={((1 / rates[from]) * rates[to])?.toFixed(5)} {to}
         </div>
         <div className={classes.rate}>
-          1 {to}={(rates[from] / rates[to]).toFixed(5)} {from}
+          1 {to}={(rates[from] / rates[to])?.toFixed(5)} {from}
         </div>
       </div>
     </div>
