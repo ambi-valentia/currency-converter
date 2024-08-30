@@ -6,6 +6,7 @@ Features:
 - 180 currencies, including crypto
 - Up-to-date rates from open API
 - On-the-go convertion
+- Easy currency search
 - Mobile-friendly
 - `from` currency detection based on user's locale
 - Switch `from` and `to` values
