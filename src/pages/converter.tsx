@@ -5,7 +5,6 @@ import { url } from "../constants/urls";
 import { currencies, initRates } from "../constants/currenciesRates";
 import { getCountryCodeFromLocale } from "../lib/getCountryFromLocale";
 import { countryToCurrency } from "../constants/countryToCurrency";
-import React from "react";
 import { supportsInputTypeNumber } from "../lib/supportsNumberTypeInput";
 
 const currencyOptions = Object.values(currencies).map((label, index) => ({
@@ -18,7 +17,7 @@ const countryCode = getCountryCodeFromLocale(userLocale);
 
 export function Converter() {
   const [amount, setAmount] = useState<string>("");
-  const [result, setResult] = useState<number>();
+  const [result, setResult] = useState<number | null>(0);
   const [rates, setRates] = useState<{ [currency: string]: number }>(initRates);
   const [from, setFrom] = useState<string>(
     countryCode ? countryToCurrency[countryCode] : ""
@@ -129,9 +128,9 @@ export function Converter() {
         }`}
       >
         {!!Number(amount) && result && (
-          <React.Fragment>
+          <>
             {result?.toFixed(6)} {to}
-          </React.Fragment>
+          </>
         )}
         <div className={classes.rate}>
           1 {from}={((1 / rates[from]) * rates[to])?.toFixed(5)} {to}
